@@ -6,8 +6,10 @@ import 'package:news/models/category_model.dart';
 import 'package:news/network/remote/api_manager.dart';
 import 'package:news/screens/news_screen/catigories_screen.dart';
 import 'package:news/screens/news_screen/news_screen.dart';
+import 'package:news/screens/news_screen/search_widget.dart';
 import '../../componants/drawer_item.dart';
 import '../../componants/source_item.dart';
+import '../../models/NewsDataModel.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'news';
@@ -18,20 +20,30 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentSource = 0;
+  bool isIconClicked = false;
+  List<Articles> allArticles = []; // Replace this with your article data
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: DrawerItem(onDrawerClicked),
+      drawer:
+          // isIconClicked ? SearchBox() :
+          DrawerItem(onDrawerClicked),
       appBar: AppBar(
-        title: Text(
-          "News App",
-          style: GoogleFonts.elMessiri(fontWeight: FontWeight.w100),
-        ),
+        titleSpacing: 1,
+        toolbarHeight: 60,
+        //  isIconClicked ? SearchBox() :
+        title: buildAppBarTitle(),
         centerTitle: true,
         actions: [
+          // isIconClicked ? SearchBox() :
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              // isIconClicked = !isIconClicked;
+              setState(() {
+                showSearch(context: context, delegate: NewsSearch());
+              });
+            },
             icon: Icon(Icons.search),
           ),
         ],
@@ -46,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      // body: SearchBox(),
       body: model == null
           ? CategoriesScreen(onCategoryClicked)
           : NewsScreen(model!),
@@ -66,25 +79,15 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {});
     } else if (number == DrawerItem.setting) {}
   }
+
+  Widget buildAppBarTitle() {
+    return Center(
+      child: Container(
+        child: Text(
+          "News App",
+          style: GoogleFonts.elMessiri(fontWeight: FontWeight.w100),
+        ),
+      ),
+    );
+  }
 }
-// Container(
-//   height: 40,
-//   child: ListView.separated(
-//     separatorBuilder: (context, index) => SizedBox(
-//       width: 12,
-//     ),
-//     scrollDirection: Axis.horizontal,
-//     itemCount: sources.length,
-//     itemBuilder: (context, index) {
-//       return InkWell(
-//           onTap: () {
-//             currentSource = index;
-//             setState(() {});
-//           },
-//           child: SourceItem(
-//               sources[index].name ?? "",
-//               sources.elementAt(currentSource) ==
-//                   sources[index]));
-//     },
-//   ),
-// ),

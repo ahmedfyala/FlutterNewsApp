@@ -17,6 +17,21 @@ class SourcesTitle extends StatefulWidget {
 
 class _SourcesTitleState extends State<SourcesTitle> {
   int index = 0;
+  final ScrollController _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      print(_controller.offset); // <-- This is it.
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +55,8 @@ class _SourcesTitleState extends State<SourcesTitle> {
           ),
         ),
         FutureBuilder(
-          future: ApiManager.getNewsData(widget.sources[index].id ?? ""),
+          future:
+              ApiManager.getNewsData(sourceId: widget.sources[index].id ?? ""),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());

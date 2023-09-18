@@ -15,9 +15,13 @@ class ApiManager {
     return sourceResponse;
   }
 
-  static Future<NewsDataModel> getNewsData(String sourceId) async {
-    Uri url = Uri.https(Constants.BASE_URL, "/v2/everything",
-        {"apiKey": Constants.API_KEY, "sources": sourceId});
+  static Future<NewsDataModel> getNewsData(
+      {String? sourceId, String? searchKeyword}) async {
+    Uri url = Uri.https(Constants.BASE_URL, "/v2/everything", {
+      "apiKey": Constants.API_KEY,
+      "sources": sourceId,
+      "q": searchKeyword,
+    });
     http.get(url);
     var response = await http.get(url);
     var jsonData = jsonDecode(response.body);
